@@ -63,7 +63,7 @@ const Home: NextPage = () => {
 
       setHasLoginSuccessful(true)
 
-      router.push('/history')
+      router.push('/dashboard')
     } catch (err) {
       setHasLoginSuccessful(false)
       console.error('err')

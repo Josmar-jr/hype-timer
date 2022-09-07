@@ -2,19 +2,16 @@
 
 import { supabase } from '../../services/supabase'
 import { NavLink } from './NavLink'
+import { SignOutModal } from './SingOutModal'
 
 export function Sidebar() {
-  async function logout() {
-    await supabase.auth.signOut()
-  }
-
   return (
     <aside className="bg-gray-700 h-screen w-24 absolute top-0 left-0">
-      <div className="h-full flex flex-col justify-between grow p-4">
+      <div className="h-full flex flex-col justify-between grow px-4 py-8">
         <div>logo</div>
 
         <nav className="flex flex-col gap-4 mb-10">
-          <NavLink href="/" shouldMatchExactHref>
+          <NavLink href="/dashboard" shouldMatchExactHref>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="38"
@@ -34,7 +31,7 @@ export function Sidebar() {
               ></path>
             </svg>
           </NavLink>
-          <NavLink href="/history">
+          <NavLink href="/users">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="38"
@@ -50,9 +47,9 @@ export function Sidebar() {
                 r="80"
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
               ></circle>
               <circle
                 className="group-hover:stroke-violet-500"
@@ -61,24 +58,26 @@ export function Sidebar() {
                 r="48"
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
               ></circle>
               <polyline
                 className="group-hover:stroke-violet-500"
                 points="176 160 176 240 128 216 80 240 80 160"
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="16"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="16"
               ></polyline>
             </svg>
           </NavLink>
         </nav>
 
-        <div></div>
+        <div className="flex justify-center items-center">
+          <SignOutModal />
+        </div>
       </div>
     </aside>
   )

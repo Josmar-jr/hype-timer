@@ -4,15 +4,11 @@ import { ExperienceBar } from '../components/ExpirenciBar'
 import { Button } from '../components/Form/Button'
 import { DefaultLayout } from '../components/Layouts/intex'
 import { Profile } from '../components/Profile'
-import { Sidebar } from '../components/Sidebar'
+
 import { Timer } from '../components/Timer'
 import { supabase } from '../services/supabase'
 
 const Dashboard: NextPage = () => {
-  async function logout() {
-    await supabase.auth.signOut()
-  }
-
   return (
     <DefaultLayout>
       <>

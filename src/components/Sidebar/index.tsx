@@ -1,9 +1,13 @@
 /* eslint-disable react/no-unknown-property */
 
-import { House } from 'phosphor-react'
+import { supabase } from '../../services/supabase'
 import { NavLink } from './NavLink'
 
 export function Sidebar() {
+  async function logout() {
+    await supabase.auth.signOut()
+  }
+
   return (
     <aside className="bg-gray-700 h-screen w-24 absolute top-0 left-0">
       <div className="h-full flex flex-col justify-between grow p-4">

@@ -26,7 +26,6 @@ export function NavLink({
   ) {
     isActive = true
   }
-  console.log(asPath, isActive)
 
   return (
     <Link {...rest}>

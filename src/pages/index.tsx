@@ -54,7 +54,7 @@ const Home: NextPage = () => {
     password,
   }: UserLoginFormData) {
     try {
-      const { error } = await supabase.auth.signIn({
+      const { error, user } = await supabase.auth.signIn({
         email,
         password,
       })
@@ -121,7 +121,7 @@ const Home: NextPage = () => {
         <div className="flex flex-col my-8">
           <hr className="h-0 border-t mt-sm border-gray-300" />
           <div className="-mt-3 text-sm text-center">
-            <span className="px-2 bg-primary bg-gray-700 text-gray-150 font-semibold">
+            <span className="px-2 bg-primary bg-gray-800 text-gray-150 font-semibold">
               Or with
             </span>
           </div>
@@ -149,7 +149,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     redirect: {
-      destination: '/history',
+      destination: '/dashboard',
       permanent: false,
     },
   }

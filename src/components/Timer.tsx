@@ -1,5 +1,5 @@
 const clsNumber =
-  'flex pt-1 flex-1 justify-center bg-gray-700 font-bold rounded'
+  'flex pb-2 pt-3 flex-1 justify-center bg-gray-700 font-bold rounded'
 
 export function Timer() {
   return (

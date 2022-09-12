@@ -31,7 +31,7 @@ export function Sidebar() {
               ></path>
             </svg>
           </NavLink>
-          <NavLink href="/users">
+          <NavLink href="/leaderboard">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="38"

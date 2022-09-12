@@ -13,21 +13,24 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   isLoading?: boolean
   children: ReactNode
   variant?: keyof typeof VARIANTS_BUTTON
+  clns?: string
 }
 
 export function Button({
   isLoading = false,
   children,
   variant = 'primary',
+  clns = '',
   ...rest
 }: ButtonProps) {
   return (
     <button
       {...rest}
       className={cln(
-        'w-full rounded inline-flex justify-center focus:outline-none focus:border-transparent focus:ring transition-colors focus:ring-offset-2 font-medium disabled:cursor-not-allowed',
+        'w-full rounded inline-flex justify-center items-center gap-2 focus:outline-none focus:border-transparent focus:ring transition-colors focus:ring-offset-2 font-medium disabled:cursor-not-allowed',
         {
-          [VARIANTS_BUTTON[variant]]: variant,
+          [clns || VARIANTS_BUTTON[variant]]: variant,
+          clns,
         },
       )}
     >

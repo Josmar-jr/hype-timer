@@ -16,6 +16,7 @@ import { DefaultLayout } from '../components/Layouts/intex'
 import { Profile } from '../components/Profile'
 import { User } from '@supabase/supabase-js'
 import Head from 'next/head'
+import { useChallenge } from '../contexts/challengesContext'
 
 type Challenge = {
   id: string
@@ -31,97 +32,9 @@ interface DashboardProps {
 }
 
 const Dashboard: NextPage<DashboardProps> = ({ user }) => {
-  const [challenges, setChallenges] = useState<Challenge[]>([])
-  const [activeChallengeId, setActiveChallengeId] = useState<string | null>(
-    null,
-  )
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
-
   const { data: player, isLoading, isError } = usePlayer(user.id)
-
-  function handleCreateNewChallenge() {
-    const id = uuidV4()
-
-    const newChallenge: Challenge = {
-      id,
-      minutesAmount: 0.2,
-      task: 'Comer',
-      startDate: new Date(),
-    }
-
-    setChallenges((oldChallenge) => [...oldChallenge, newChallenge])
-    setActiveChallengeId(id)
-    setAmountSecondsPassed(0)
-  }
-
-  function handleInterruptChallenge() {
-    setChallenges((oldChallenge) =>
-      oldChallenge.map((challenge) => {
-        if (challenge.id === activeChallengeId) {
-          return {
-            ...challenge,
-            interruptDate: new Date(),
-          }
-        }
-
-        return challenge
-      }),
-    )
-
-    setActiveChallengeId(null)
-  }
-
-  const activeChallenge = challenges.find(
-    (challenge) => challenge.id === activeChallengeId,
-  )
-
-  const totalSeconds = activeChallenge ? activeChallenge.minutesAmount * 60 : 0
-  const currentSeconds = activeChallenge
-    ? totalSeconds - amountSecondsPassed
-    : 0
-
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
-
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
-
-  useEffect(() => {
-    let interval: number
-
-    if (activeChallenge) {
-      interval = setInterval(() => {
-        const secondsDifference = differenceInSeconds(
-          new Date(),
-          activeChallenge.startDate,
-        )
-
-        if (secondsDifference >= totalSeconds) {
-          setChallenges((oldChallenge) =>
-            oldChallenge.map((challenge) => {
-              if (challenge.id === activeChallengeId) {
-                return {
-                  ...challenge,
-                  finishedDate: new Date(),
-                }
-              }
-
-              return challenge
-            }),
-          )
-          setAmountSecondsPassed(totalSeconds)
-
-          clearInterval(interval)
-        } else {
-          setAmountSecondsPassed(secondsDifference)
-        }
-      }, 1000)
-    }
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [activeChallenge, totalSeconds, activeChallengeId])
+  const { createNewChallenge, interruptCurrentChallenge, activeChallenge } =
+    useChallenge()
 
   if (isLoading) {
     return (
@@ -140,11 +53,7 @@ const Dashboard: NextPage<DashboardProps> = ({ user }) => {
     <DefaultLayout>
       <>
         <Head>
-          <title>
-            {minutes[0]}
-            {minutes[1]}:{seconds[0]}
-            {seconds[1]}
-          </title>
+          <title></title>
         </Head>
 
         <ExperienceBar />
@@ -164,23 +73,18 @@ const Dashboard: NextPage<DashboardProps> = ({ user }) => {
 
             <Timer />
 
-            {minutes[0]}
-            {minutes[1]}
-            {seconds[0]}
-            {seconds[1]}
-
             {activeChallenge ? (
               <Button
-                onClick={handleInterruptChallenge}
+                onClick={interruptCurrentChallenge}
                 style={{ padding: '1.25rem' }}
                 clns="bg-red-700"
               >
                 <HandPalm size={20} />
-                Stop
+                Encerrar
               </Button>
             ) : (
               <Button
-                onClick={handleCreateNewChallenge}
+                onClick={createNewChallenge}
                 style={{ padding: '1.25rem' }}
               >
                 <Play size={20} />

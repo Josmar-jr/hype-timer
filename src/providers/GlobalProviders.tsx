@@ -1,16 +1,16 @@
-import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { QueryClient, QueryClientProvider } from 'react-query'
-
 import { AuthProvider } from '../contexts/authContext'
-import { GlobalProvider } from '../providers'
-
-import '../styles/globals.css'
 
 const queryClient = new QueryClient()
 
-function MyApp({ Component, pageProps }: AppProps) {
+interface GlobalProvidersProps {
+  children: ReactNode
+}
+
+export function GlobalProviders({ children }: GlobalProvidersProps) {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
@@ -21,11 +21,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           height={3}
         />
 
-        <Component {...pageProps} />
+        {children}
+
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>
   )
 }
-
-export default MyApp

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
 import { GetServerSideProps, NextPage } from 'next'
 import { v4 as uuidV4 } from 'uuid'
-import { differenceInSeconds } from 'date-fns'
 import { CircleNotch, HandPalm, Play } from 'phosphor-react'
+import { User } from '@supabase/supabase-js'
 
 import { supabase } from '../services/supabase'
 
@@ -14,9 +13,8 @@ import { ExperienceBar } from '../components/ExpirenciBar'
 import { Button } from '../components/Form/Button'
 import { DefaultLayout } from '../components/Layouts/intex'
 import { Profile } from '../components/Profile'
-import { User } from '@supabase/supabase-js'
-import Head from 'next/head'
-import { useChallenge } from '../contexts/challengesContext'
+
+import { useChallengeStore } from '../stores/useChallengeStore'
 
 type Challenge = {
   id: string
@@ -32,9 +30,33 @@ interface DashboardProps {
 }
 
 const Dashboard: NextPage<DashboardProps> = ({ user }) => {
-  const { data: player, isLoading, isError } = usePlayer(user.id)
-  const { createNewChallenge, interruptCurrentChallenge, activeChallenge } =
-    useChallenge()
+  const { data: player, isLoading } = usePlayer(user.id)
+
+  const addNewChallenge = useChallengeStore((s) => s.addNewChallenge)
+  const setAmountSecondsPassed = useChallengeStore((s) => s.setSecondsPassed)
+  const challenges = useChallengeStore((s) => s.challenges)
+  const activeChallengeId = useChallengeStore((s) => s.activeChallengeId)
+  const interruptCurrentChallenge = useChallengeStore(
+    (s) => s.interruptCurrentChallenge,
+  )
+
+  const activeChallenge = challenges.find(
+    (challenge) => challenge.id === activeChallengeId,
+  )
+
+  function createNewChallenge() {
+    const id = uuidV4()
+
+    const newChallenge: Challenge = {
+      id,
+      minutesAmount: 0.2,
+      task: 'Comer',
+      startDate: new Date(),
+    }
+
+    addNewChallenge(newChallenge)
+    setAmountSecondsPassed(0)
+  }
 
   if (isLoading) {
     return (
@@ -52,10 +74,6 @@ const Dashboard: NextPage<DashboardProps> = ({ user }) => {
   return (
     <DefaultLayout>
       <>
-        <Head>
-          <title></title>
-        </Head>
-
         <ExperienceBar />
 
         <section className="w-full md:flex-row flex-col flex justify-between md:gap-20 items-center h-full py-12 md:py-52">

@@ -8,8 +8,24 @@ import { GlobalProvider } from '../providers'
 
 import '../styles/globals.css'
 
-function MyApp(props: AppProps) {
-  return <GlobalProvider {...props} />
+const queryClient = new QueryClient()
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <NextNProgress
+          color="#7c3aed"
+          startPosition={0.3}
+          stopDelayMs={100}
+          height={3}
+        />
+
+        <Component {...pageProps} />
+        <Toaster />
+      </QueryClientProvider>
+    </AuthProvider>
+  )
 }
 
 export default MyApp

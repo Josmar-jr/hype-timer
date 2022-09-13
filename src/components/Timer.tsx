@@ -1,18 +1,28 @@
-import { differenceInSeconds } from 'date-fns'
 import { useEffect } from 'react'
-import { useChallenge } from '../contexts/challengesContext'
+import Head from 'next/head'
+import { differenceInSeconds } from 'date-fns'
+
+import { useChallengeStore } from '../stores/useChallengeStore'
 
 const clsNumber =
   'flex pb-2 pt-3 flex-1 justify-center bg-gray-700 font-bold rounded'
 
 export function Timer() {
-  const {
-    activeChallenge,
-    activeChallengeId,
-    markCurrentCycleAsFinished,
-    amountSecondsPassed,
-    setSecondsPassed,
-  } = useChallenge()
+  const activeChallengeId = useChallengeStore(
+    (state) => state.activeChallengeId,
+  )
+  const challenges = useChallengeStore((state) => state.challenges)
+  const setSecondsPassed = useChallengeStore((state) => state.setSecondsPassed)
+  const amountSecondsPassed = useChallengeStore(
+    (state) => state.amountSecondsPassed,
+  )
+  const markCurrentCycleAsFinished = useChallengeStore(
+    (state) => state.markCurrentCycleAsFinished,
+  )
+
+  const activeChallenge = challenges.find(
+    (challenge) => challenge.id === activeChallengeId,
+  )
 
   const totalSeconds = activeChallenge ? activeChallenge.minutesAmount * 60 : 0
 
@@ -58,14 +68,16 @@ export function Timer() {
   const minutes = String(minutesAmount).padStart(2, '0')
   const seconds = String(secondsAmount).padStart(2, '0')
 
-  useEffect(() => {
-    if (activeChallenge) {
-      document.title = `${minutes}:${seconds}`
-    }
-  }, [minutes, seconds, activeChallenge])
-
   return (
     <div className="flex font-mono text-9xl w-full">
+      <Head>
+        <title>
+          {minutes[0]}
+          {minutes[1]}:{seconds[0]}
+          {seconds[1]}
+        </title>
+      </Head>
+
       <div className="flex flex-1 justify-evenly gap-2 items-center">
         <span className={clsNumber}>{minutes[0]}</span>
         <span className={clsNumber}>{minutes[1]}</span>
